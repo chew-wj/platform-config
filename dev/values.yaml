@@ -16,7 +16,18 @@ deploymentList:
         value: BAR
     containerPort: 80
     cpuAllocated: 200m
-    memAllocated: 128Mi    
+    memAllocated: 128Mi
+  httpd:
+    name: httpd
+    imageTag: latest
+    repository: docker.io
+    replicas: 2
+    extraEnvs:
+      - name: FOO
+        value: BAR
+    containerPort: 80
+    cpuAllocated: 200m
+    memAllocated: 128Mi  
 strategy:
   Rollout:
     blueGreen:
