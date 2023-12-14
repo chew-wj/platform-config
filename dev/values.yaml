@@ -1,0 +1,51 @@
+# Default values for olea-platform.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+### Default value for cpuAllocated is 0.5, memoryAllocated is 1.75Gi,  Fargate will provision 1 vCPU and 2Gi memory for each pod
+### For JVM Settings, Maximize size of heap memory, set Xms and Xmx to the same value, 1536 by default
+### Unless you change the default value for cpuAllocated and memoryAllocated
+deploymentList:
+  nginx:
+    name: nginx
+    imageTag: latest
+    repository: docker.io
+    replicas: 2
+    extraEnvs:
+      - name: FOO
+        value: BAR
+    containerPort: 80
+    cpuAllocated: 200m
+    memAllocated: 128Mi    
+strategy:
+  Rollout:
+    blueGreen:
+      activeMetadata:
+        labels:
+          role: active
+      previewMetadata:
+        labels:
+          role: preview
+      autoPromotionEnabled: false
+      scaleDownDelaySeconds: 60
+service:
+  type: ClusterIP
+  port: 80
+podAnnotations: {}
+podSecurityContext: {}
+# fsGroup: 2000
+
+securityContext: {}
+# capabilities:
+#   drop:
+#   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
